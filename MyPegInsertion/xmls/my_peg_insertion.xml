@@ -1,0 +1,637 @@
+<mujoco model="GEN3_2_BASE">
+  <compiler angle="radian" meshdir="assets" autolimits="true"/>
+  <option integrator="implicitfast" timestep="0.0002" gravity="0 0 -3">
+    <flag contact="enable" energy="enable" gravity="enable"/>
+  </option>
+
+
+  <asset>
+    <mesh name="Satbase" file="Satbase.STL" scale="0.001 0.001 0.001"/>
+    <mesh name="Base" file="Base.STL"/>
+    <mesh name="shoulder_link" file="shoulder_link.STL"/>
+    <mesh name="half_arm_1_link" file="half_arm_1_link.STL"/>
+    <mesh name="half_arm_2_link" file="half_arm_2_link.STL"/>
+    <mesh name="forearm_link" file="forearm_link.STL"/>
+    <mesh name="spherical_wrist_1_link" file="spherical_wrist_1_link.STL"/>
+    <mesh name="spherical_wrist_2_link" file="spherical_wrist_2_link.STL"/>
+    <mesh name="bracelet_no_vision_link" file="bracelet_no_vision_link.STL"/>
+    <texture name="grid" type="2d" builtin="checker" rgb1=".1 .2 .3" rgb2=".2 .3 .4" width="500" height="500"/>
+    <material name="grid" texture="grid" texrepeat="8 8" reflectance=".1"/>
+    <material name="metal" rgba="0.58 0.58 0.58 1"/>
+    <material name="silicone" rgba="0.1882 0.1882 0.1882 1"/>
+    <material name="gray" rgba="0.4627 0.4627 0.4627 1"/>
+    <material name="black_2f85" rgba="0.149 0.149 0.149 1"/>
+    <material name="truss_material" rgba="0.58 0.58 0.58 1"/>
+    <mesh class="2f85" file="robotiq_85_base_link.stl"/>
+    <mesh class="2f85" file="robotiq_85_outter_knuckle_link.stl"/>
+    <mesh class="2f85" file="robotiq_85_finger_link.stl"/>
+    <mesh class="2f85" file="robotiq_85_finger_tip_link.stl"/>
+    <mesh class="2f85" file="robotiq_85_finger_pad.stl"/>
+    <mesh class="2f85" file="robotiq_85_finger_silicone_pad.stl"/>
+    <mesh class="2f85" file="robotiq_85_inner_knuckle_link.stl"/>
+  </asset>
+
+  <default>
+    <default class="truss">
+      <geom type="cylinder" size="0.02 0.21" material="truss_material"  contype="1" conaffinity="1" friction="1.0 0.005 0.0001"/>
+    </default>
+    <default class="2f85">
+     <mesh scale="0.001 0.001 0.001"/>
+     <joint axis="1 0 0" limited="false"/>
+     <default class="robotiq_85_outter_knuckle_link">
+       <joint limited="true" range="0 0.834"
+             solimplimit="0.95 0.99 0.001" solreflimit="0.005 1"
+             armature="0.005" damping="0.1"/>
+     </default>
+     <default class="robotiq_85_finger_tip_link">
+       <joint limited="true" armature="0.001"
+             range="-0.872664 0.872664" pos="0 -0.018 0.0065"
+             solimplimit="0.95 0.99 0.001" solreflimit="0.005 1"/>
+     </default>
+     <default class="robotiq_85_inner_knuckle_link">
+       <joint limited="true" armature="0.001"
+             range="-0.29670597283 0.8" stiffness="0.05"
+             springref="2.62" damping="0.00125"/>
+     </default>
+     <default class="robotiq_85_finger_link">
+       <joint limited="true" armature="0.001"
+             range="-1.57 0" solimplimit="0.95 0.99 0.001"
+             solreflimit="0.005 1"/>
+     </default>
+     <default class="visual_2f85">
+      <geom type="mesh" contype="0" conaffinity="0" group="2"/>
+     </default>
+     <default class="collision_2f85">
+       <geom type="mesh" group="3"/>
+       <default class="robotiq_85_finger_pad_box1">
+        <geom mass="0.0" type="box" pos="0 -0.0026 0.028125"
+              size="0.011 0.004 0.009375" friction="0.6"
+              solimp="0.95 0.99 0.001" solref="0.004 1"
+              priority="1" rgba="0.55 0.55 0.55 1"/>
+       </default>
+       <default class="robotiq_85_finger_pad_box2">
+         <geom mass="0.0" type="box" pos="0 -0.0026 0.009375"
+              size="0.011 0.004 0.009375" friction="0.6"
+              solimp="0.95 0.99 0.001" solref="0.004 1"
+              priority="1" rgba="0.45 0.45 0.45 1"/>
+       </default>
+     </default>
+    </default>
+  </default>
+
+  <contact>
+    <exclude name="c11" body1="worldbody" body2="Shoulder_Link_1"/>
+    <exclude name="c21" body1="Shoulder_Link_1" body2="HalfArm1_Link_1"/>
+    <exclude name="c31" body1="HalfArm1_Link_1" body2="HalfArm2_Link_1"/>
+    <exclude name="c41" body1="HalfArm2_Link_1" body2="ForeArm_Link_1"/>
+    <exclude name="c51" body1="ForeArm_Link_1" body2="SphericalWrist1_Link_1"/>
+    <exclude name="c61" body1="SphericalWrist1_Link_1" body2="SphericalWrist2_Link_1"/>
+    <exclude name="c71" body1="SphericalWrist2_Link_1" body2="Bracelet_Link_1"/>
+
+    <exclude name="c12" body1="worldbody" body2="Shoulder_Link_2"/>
+    <exclude name="c22" body1="Shoulder_Link_2" body2="HalfArm1_Link_2"/>
+    <exclude name="c32" body1="HalfArm1_Link_2" body2="HalfArm2_Link_2"/>
+    <exclude name="c42" body1="HalfArm2_Link_2" body2="ForeArm_Link_2"/>
+    <exclude name="c52" body1="ForeArm_Link_2" body2="SphericalWrist1_Link_2"/>
+    <exclude name="c62" body1="SphericalWrist1_Link_2" body2="SphericalWrist2_Link_2"/>
+    <exclude name="c72" body1="SphericalWrist2_Link_2" body2="Bracelet_Link_2"/>
+
+    <exclude body1="robotiq_85_base_link1" body2="robotiq_85_left_knuckle_link1"/>
+    <exclude body1="robotiq_85_base_link1" body2="robotiq_85_right_knuckle_link1"/>
+    <exclude body1="robotiq_85_base_link1" body2="robotiq_85_left_inner_knuckle_link1"/>
+    <exclude body1="robotiq_85_base_link1" body2="robotiq_85_right_inner_knuckle_link1"/>
+    <exclude body1="robotiq_85_right_finger_link1" body2="robotiq_85_right_finger_tip_link1"/>
+    <exclude body1="robotiq_85_left_finger_link1" body2="robotiq_85_left_finger_tip_link1"/>
+
+    <exclude body1="robotiq_85_base_link2" body2="robotiq_85_left_knuckle_link2"/>
+    <exclude body1="robotiq_85_base_link2" body2="robotiq_85_right_knuckle_link2"/>
+    <exclude body1="robotiq_85_base_link2" body2="robotiq_85_left_inner_knuckle_link2"/>
+    <exclude body1="robotiq_85_base_link2" body2="robotiq_85_right_inner_knuckle_link2"/>
+    <exclude body1="robotiq_85_right_finger_link2" body2="robotiq_85_right_finger_tip_link2"/>
+    <exclude body1="robotiq_85_left_finger_link2" body2="robotiq_85_left_finger_tip_link2"/>
+  </contact>
+  <worldbody>
+  <body name="worldbody">
+    <light name="top" pos="0 0 10" castshadow="false"/>
+    <geom size="10 10 .001" type="plane" material="grid"/>
+    <geom name="base_link" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.7 0.7 0.7 1" mesh="Satbase"/>
+    <!--<geom name="base_link" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.7 0.7 0.7 1" mesh="Satbase"/>-->
+    <!--<geom type="mesh" rgba="0.7 0.7 0.7 1" mesh="Satbase"/>-->
+    <!--<geom name="base_link_1" pos="0 0.35 0.119" quat="0.707107 0 0 0.707107" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.75294 0.75294 0.75294 1" mesh="Base"/>-->
+    <geom pos="0 0.35 0.119" quat="0.707107 0 0 0.707107" type="mesh" rgba="0.75294 0.75294 0.75294 1" mesh="Base"/>
+    <!--<geom name="base_link_2" pos="0 -0.35 0.119" quat="0.707107 0 0 -0.707107" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.75294 0.75294 0.75294 1" mesh="Base"/>-->
+    <geom pos="0 -0.35 0.119" quat="0.707107 0 0 -0.707107" type="mesh" rgba="0.75294 0.75294 0.75294 1" mesh="Base"/>
+    <body name="Shoulder_Link_1" pos="0 0.35 0.27543" quat="0 0.707107 -0.707107 0">
+      <inertial pos="-2.3e-05 -0.010364 -0.07336" quat="0.707051 0.0451246 -0.0453544 0.704263" mass="1.3773" diaginertia="0.00488868 0.00457 0.00135132"/>
+      <joint name="left_arm_joint_1" pos="0 0 0" axis="0 0 1"/>
+      <!--<geom name="Shoulder_Link_1" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.75294 0.75294 0.75294 1" mesh="shoulder_link"/>-->
+      <geom type="mesh" rgba="0.75294 0.75294 0.75294 1" mesh="shoulder_link"/>
+      <body name="HalfArm1_Link_1" pos="0 0.005375 -0.12838" quat="0.707107 0.707107 0 0">
+        <inertial pos="-4.4e-05 -0.09958 -0.013278" quat="0.482348 0.516286 -0.516862 0.483366" mass="1.1636" diaginertia="0.0113017 0.011088 0.00102532"/>
+        <joint name="left_arm_joint_2" pos="0 0 0" axis="0 0 1" range="-2.41 2.41"/>
+        <geom name="HalfArm1_Link_1" type="mesh" contype="1" conaffinity="1" group="1" density="0" rgba="0.75294 0.75294 0.75294 1" mesh="half_arm_1_link"/>
+        <!--<geom type="mesh" rgba="0.75294 0.75294 0.75294 1" mesh="half_arm_1_link"/>-->
+        <body name="HalfArm2_Link_1" pos="0 -0.21038 -0.006375" quat="0.707107 -0.707107 0 0">
+          <inertial pos="-4.4e-05 -0.006641 -0.117892" quat="0.706144 0.0213722 -0.0209128 0.707437" mass="1.1636" diaginertia="0.0111633 0.010932 0.00100671"/>
+          <joint name="left_arm_joint_3" pos="0 0 0" axis="0 0 1"/>
+          <geom name="HalfArm2_Link_1" type="mesh" contype="1" conaffinity="1" group="1" density="0" rgba="0.75294 0.75294 0.75294 1" mesh="half_arm_2_link"/>
+          <!--<geom type="mesh" rgba="0.75294 0.75294 0.75294 1" mesh="half_arm_2_link"/>-->
+          <body name="ForeArm_Link_1" pos="0 0.006375 -0.21038" quat="0.707107 0.707107 0 0">
+            <inertial pos="-1.8e-05 -0.075478 -0.015006" quat="0.483678 0.515961 -0.515859 0.483455" mass="0.9302" diaginertia="0.00834839 0.008147 0.000598606"/>
+            <joint name="left_arm_joint_4" pos="0 0 0" axis="0 0 1" range="-2.66 2.66"/>
+            <geom name="ForeArm_Link_1" type="mesh" contype="1" conaffinity="1" group="1" density="0" rgba="0.75294 0.75294 0.75294 1" mesh="forearm_link"/>
+            <!--<geom type="mesh" rgba="0.75294 0.75294 0.75294 1" mesh="forearm_link"/>-->
+            <body name="SphericalWrist1_Link_1" pos="0 -0.20843 -0.006375" quat="0.707107 -0.707107 0 0">
+              <inertial pos="1e-06 -0.009432 -0.063883" quat="0.703558 0.0707492 -0.0707492 0.703558" mass="0.6781" diaginertia="0.00165901 0.001596 0.000346988"/>
+              <joint name="left_arm_joint_5" pos="0 0 0" axis="0 0 1"/>
+              <geom name="SphericalWrist1_Link_1" type="mesh" contype="1" conaffinity="1" group="1" density="0" rgba="0.75294 0.75294 0.75294 1" mesh="spherical_wrist_1_link"/>
+              <!--<geom type="mesh" rgba="0.75294 0.75294 0.75294 1" mesh="spherical_wrist_1_link"/>-->
+              <body name="SphericalWrist2_Link_1" pos="0 0.00017505 -0.10593" quat="0.707107 0.707107 0 0">
+                <inertial pos="1e-06 -0.045483 -0.00965" quat="0.44426 0.550121 -0.550121 0.44426" mass="0.6781" diaginertia="0.00170087 0.001641 0.00035013"/>
+                <joint name="left_arm_joint_6" pos="0 0 0" axis="0 0 1" range="-2.23 2.23"/>
+                <geom name="SphericalWrist2_Link_1" type="mesh" contype="1" conaffinity="1" group="1" density="0" rgba="0.75294 0.75294 0.75294 1" mesh="spherical_wrist_2_link"/>
+                <!--<geom type="mesh" rgba="0.75294 0.75294 0.75294 1" mesh="spherical_wrist_2_link"/>-->
+                <body name="Bracelet_Link_1" pos="0 -0.10593 -0.00017505" quat="0.707107 -0.707107 0 0">
+                  <inertial pos="-9.89509e-05 -0.00401508 -0.0892244" quat="0.990951 0.125618 -0.00862862 0.0464987" mass="1.4216" diaginertia="0.00451198 0.00446155 0.00257163"/>
+                  <joint name="left_arm_joint_7" pos="0 0 0" axis="0 0 1"/>
+                  <geom name="Bracelet_Link_1" type="mesh" contype="1" conaffinity="1" group="1" density="0" rgba="0.75294 0.75294 0.75294 1" mesh="bracelet_no_vision_link"/>
+                  <!--<geom type="mesh" rgba="0.75294 0.75294 0.75294 1" mesh="bracelet_no_vision_link"/>-->
+                  <body name="robotiq_85_base_link1" pos="0 0 -0.0615250000000001" euler="3.14159265358979 1.09937075168372E-32 0">
+                    <inertial mass="0.777441" pos="0 -2.70394e-05 0.0354675"
+                              quat="1 -0.00152849 0 0" diaginertia="0.000260285 0.000225381 0.000152708"/>
+                    <geom class="visual_2f85" mesh="robotiq_85_base_link" material="black_2f85"/>
+                    <geom class="collision_2f85" mesh="robotiq_85_base_link"/>
+
+                    <!--<geom type="cylinder" size="0.005 0.1" pos="0.0 0 0" euler="0 1.5707963267945 0" rgba="1 0 0 1"/>
+                    <geom type="cylinder" size="0.005 0.1" pos="0 0.0 0" euler="1.5707963267945 0 0" rgba="0 1 0 1"/>
+                    <geom type="cylinder" size="0.005 0.1" pos="0 0 0.0" euler="0 0 0" rgba="0 0 1 1"/> -->
+
+                    <!--<geom type="cylinder" size="0.005 0.3" pos="0.0 0 0" euler="0 1.5707963267945 0" rgba="1 0 0 1"/>--> <!-- X-axis (Red) -->
+                    <!--<geom type="cylinder" size="0.005 0.3" pos="0 0.0 0" euler="1.5707963267945 0 0" rgba="0 1 0 1"/>--> <!-- Y-axis (Green) -->
+                    <!--<geom type="cylinder" size="0.005 0.3" pos="0 0 0.0" euler="0 0 0" rgba="0 0 1 1"/>-->  <!-- Z-axis (Blue) -->
+                    <body name="robotiq_85_right_knuckle_link1" pos="0 0.0306011 0.054904">
+                      <inertial mass="0.00899563" pos="2.96931e-12 0.0177547 0.00107314"
+                                quat="0.681301 0.732003 0 0" diaginertia="1.72352e-06 1.60906e-06 3.22006e-07"/>
+                      <joint name="robotiq_85_right_knuckle_joint1" class="robotiq_85_outter_knuckle_link"/>
+                      <geom class="visual_2f85" mesh="robotiq_85_outter_knuckle_link" material="black_2f85"/>
+                      <geom class="collision_2f85" mesh="robotiq_85_outter_knuckle_link"/>
+                      <body name="robotiq_85_right_finger_link1" pos="0 0.0315 -0.0041">
+                        <inertial mass="0.0140974" pos="0 0.00301209 0.0232175"
+                                  quat="0.705636 -0.0455904 0.0455904 0.705636" diaginertia="4.16206e-06 3.52216e-06 8.88131e-07"/>
+                        <joint name="robotiq_85_right_finger_joint1" class="robotiq_85_finger_link"/>
+                        <geom class="visual_2f85" mesh="robotiq_85_finger_link" material="black_2f85"/>
+                        <geom class="collision_2f85" mesh="robotiq_85_finger_link"/>
+                      </body>
+                    </body>
+                    <body name="robotiq_85_right_inner_knuckle_link1" pos="0 0.0132 0.0609">
+                      <inertial mass="0.0221642" pos="-8.65005e-09 0.0181624 0.0212658"
+                                quat="0.663403 -0.244737 0.244737 0.663403" diaginertia="8.96853e-06 6.71733e-06 2.63931e-06"/>
+                      <joint name="robotiq_85_right_inner_knuckle_joint1" class="robotiq_85_inner_knuckle_link"/>
+                      <geom class="visual_2f85" mesh="robotiq_85_inner_knuckle_link" material="black_2f85"/>
+                      <geom class="collision_2f85" mesh="robotiq_85_inner_knuckle_link"/>
+                      <body name="robotiq_85_right_finger_tip_link1" pos="0 0.055 0.0375">
+                        <inertial mass="0.0125222" pos="0 -0.011046 0.0124786"
+                                  quat="1 0.1664 0 0" diaginertia="2.67415e-06 2.4559e-06 6.02031e-07"/>
+                        <joint name="robotiq_85_right_finger_tip_joint1" class="robotiq_85_finger_tip_link"/>
+                        <geom class="visual_2f85" mesh="robotiq_85_finger_tip_link" material="black_2f85"/>
+                        <geom class="collision_2f85" mesh="robotiq_85_finger_tip_link"/>
+
+
+
+                        <body name="right_pad1" pos="0 -0.0189 0.01352">
+                          <geom class="robotiq_85_finger_pad_box1"/>
+                          <geom class="robotiq_85_finger_pad_box2"/>
+                          <inertial mass="0.0035" pos="0 -0.0025 0.0185"
+                                    quat="0.707107 0 0 0.707107" diaginertia="4.73958e-07 3.64583e-07 1.23958e-07"/>
+                          <geom class="visual_2f85" mesh="robotiq_85_finger_pad"/>
+                          <site name="robotiq_85_finger_right_site" type="box"
+                                size="0.011 0.001 0.018125" pos="0 -0.01 0.01770"
+                                rgba="0.3 0.2 0.1 1.0"/>
+                          <body name="right_silicone_pad1">
+                            <geom class="visual_2f85" mesh="robotiq_85_finger_silicone_pad" material="black_2f85"/>
+                          </body>
+                        </body>
+                      </body>
+                    </body>
+                    <body name="robotiq_85_left_knuckle_link1" pos="0 -0.0306011 0.054904" quat="0 0 0 1">
+                      <inertial mass="0.00899563" pos="0 0.0177547 0.00107314"
+                                quat="0.681301 0.732003 0 0" diaginertia="1.72352e-06 1.60906e-06 3.22006e-07"/>
+                      <joint name="robotiq_85_left_knuckle_joint1" class="robotiq_85_outter_knuckle_link"/>
+                      <geom class="visual_2f85" mesh="robotiq_85_outter_knuckle_link" material="black_2f85"/>
+                      <geom class="collision_2f85" mesh="robotiq_85_outter_knuckle_link"/>
+                      <body name="robotiq_85_left_finger_link1" pos="0 0.0315 -0.0041">
+                        <inertial mass="0.0140974" pos="0 0.00301209 0.0232175"
+                                  quat="0.705636 -0.0455904 0.0455904 0.705636" diaginertia="4.16206e-06 3.52216e-06 8.88131e-07"/>
+                        <joint name="robotiq_85_left_finger_joint1" class="robotiq_85_finger_link"/>
+                        <geom class="visual_2f85" mesh="robotiq_85_finger_link" material="black_2f85"/>
+                        <geom class="collision_2f85" mesh="robotiq_85_finger_link"/>
+                      </body>
+                    </body>
+                    <body name="robotiq_85_left_inner_knuckle_link1" pos="0 -0.0132 0.0609" quat="0 0 0 1">
+                      <inertial mass="0.0221642" pos="-8.65005e-09 0.0181624 0.0212658"
+                                quat="0.663403 -0.244737 0.244737 0.663403" diaginertia="8.96853e-06 6.71733e-06 2.63931e-06"/>
+                      <joint name="robotiq_85_left_inner_knuckle_joint1" class="robotiq_85_inner_knuckle_link"/>
+                      <geom class="visual_2f85" mesh="robotiq_85_inner_knuckle_link" material="black_2f85"/>
+                      <geom class="collision_2f85" mesh="robotiq_85_inner_knuckle_link"/>
+                      <body name="robotiq_85_left_finger_tip_link1" pos="0 0.055 0.0375">
+                        <inertial mass="0.0125222" pos="0 -0.011046 0.0124786"
+                                  quat="1 0.1664 0 0" diaginertia="2.67415e-06 2.4559e-06 6.02031e-07"/>
+                        <joint name="robotiq_85_left_finger_tip_joint1" class="robotiq_85_finger_tip_link"/>
+                        <geom class="visual_2f85" mesh="robotiq_85_finger_tip_link" material="black_2f85"/>
+                        <geom class="collision_2f85" mesh="robotiq_85_finger_tip_link"/>
+
+
+
+                        <body name="left_pad1" pos="0 -0.0189 0.01352">
+                          <geom class="robotiq_85_finger_pad_box1"/>
+                          <geom class="robotiq_85_finger_pad_box2"/>
+                          <inertial mass="0.0035" pos="0 -0.0025 0.0185"
+                                    quat="1 0 0 1" diaginertia="4.73958e-07 3.64583e-07 1.23958e-07"/>
+                          <geom class="visual_2f85" mesh="robotiq_85_finger_pad"/>
+                          <site name="robotiq_85_finger_left_site" type="box"
+                                size="0.011 0.001 0.018125" pos="0 -0.01 0.01770"
+                                rgba="0.3 0.2 0.1 1.0"/>
+                          <body name="left_silicone_pad1">
+                            <geom class="visual_2f85" mesh="robotiq_85_finger_silicone_pad" material="black_2f85"/>
+                          </body>
+                        </body>
+                      </body>
+                    </body>
+                  </body>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+
+    <body name="Shoulder_Link_2" pos="0 -0.35 0.27543" quat="0 0.707107 -0.707107 0">
+      <inertial pos="-2.3e-05 -0.010364 -0.07336" quat="0.707051 0.0451246 -0.0453544 0.704263" mass="1.3773" diaginertia="0.00488868 0.00457 0.00135132"/>
+      <joint name="right_arm_joint_1" pos="0 0 0" axis="0 0 1"/>
+      <!--<geom name="Shoulder_Link_2" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.75294 0.75294 0.75294 1" mesh="shoulder_link"/>-->
+      <geom type="mesh" rgba="0.75294 0.75294 0.75294 1" mesh="shoulder_link"/>
+      <body name="HalfArm1_Link_2" pos="0 0.005375 -0.12838" quat="0.707107 0.707107 0 0">
+        <inertial pos="-4.4e-05 -0.09958 -0.013278" quat="0.482348 0.516286 -0.516862 0.483366" mass="1.1636" diaginertia="0.0113017 0.011088 0.00102532"/>
+        <joint name="right_arm_joint_2" pos="0 0 0" axis="0 0 1" range="-2.41 2.41"/>
+        <geom name="HalfArm1_Link_2" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.75294 0.75294 0.75294 1" mesh="half_arm_1_link"/>
+        <geom type="mesh" rgba="0.75294 0.75294 0.75294 1" mesh="half_arm_1_link"/>
+        <body name="HalfArm2_Link_2" pos="0 -0.21038 -0.006375" quat="0.707107 -0.707107 0 0">
+          <inertial pos="-4.4e-05 -0.006641 -0.117892" quat="0.706144 0.0213722 -0.0209128 0.707437" mass="1.1636" diaginertia="0.0111633 0.010932 0.00100671"/>
+          <joint name="right_arm_joint_3" pos="0 0 0" axis="0 0 1"/>
+          <geom name="HalfArm2_Link_2" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.75294 0.75294 0.75294 1" mesh="half_arm_2_link"/>
+          <geom type="mesh" rgba="0.75294 0.75294 0.75294 1" mesh="half_arm_2_link"/>
+          <body name="ForeArm_Link_2" pos="0 0.006375 -0.21038" quat="0.707107 0.707107 0 0">
+            <inertial pos="-1.8e-05 -0.075478 -0.015006" quat="0.483678 0.515961 -0.515859 0.483455" mass="0.9302" diaginertia="0.00834839 0.008147 0.000598606"/>
+            <joint name="right_arm_joint_4" pos="0 0 0" axis="0 0 1" range="-2.66 2.66"/>
+            <geom name="ForeArm_Link_2" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.75294 0.75294 0.75294 1" mesh="forearm_link"/>
+            <geom type="mesh" rgba="0.75294 0.75294 0.75294 1" mesh="forearm_link"/>
+            <body name="SphericalWrist1_Link_2" pos="0 -0.20843 -0.006375" quat="0.707107 -0.707107 0 0">
+              <inertial pos="1e-06 -0.009432 -0.063883" quat="0.703558 0.0707492 -0.0707492 0.703558" mass="0.6781" diaginertia="0.00165901 0.001596 0.000346988"/>
+              <joint name="right_arm_joint_5" pos="0 0 0" axis="0 0 1"/>
+              <geom name="SphericalWrist1_Link_2" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.75294 0.75294 0.75294 1" mesh="spherical_wrist_1_link"/>
+              <geom type="mesh" rgba="0.75294 0.75294 0.75294 1" mesh="spherical_wrist_1_link"/>
+              <body name="SphericalWrist2_Link_2" pos="0 0.00017505 -0.10593" quat="0.707107 0.707107 0 0">
+                <inertial pos="1e-06 -0.045483 -0.00965" quat="0.44426 0.550121 -0.550121 0.44426" mass="0.6781" diaginertia="0.00170087 0.001641 0.00035013"/>
+                <joint name="right_arm_joint_6" pos="0 0 0" axis="0 0 1" range="-2.23 2.23"/>
+                <geom name="SphericalWrist2_Link_2" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.75294 0.75294 0.75294 1" mesh="spherical_wrist_2_link"/>
+                <geom type="mesh" rgba="0.75294 0.75294 0.75294 1" mesh="spherical_wrist_2_link"/>
+                <body name="Bracelet_Link_2" pos="0 -0.10593 -0.00017505" quat="0.707107 -0.707107 0 0">
+                  <inertial pos="-9.89509e-05 -0.00401508 -0.0892244" quat="0.990951 0.125618 -0.00862862 0.0464987" mass="1.4216" diaginertia="0.00451198 0.00446155 0.00257163"/>
+                  <joint name="right_arm_joint_7" pos="0 0 0" axis="0 0 1"/>
+                  <geom name="Bracelet_Link_2" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.75294 0.75294 0.75294 1" mesh="bracelet_no_vision_link"/>
+                  <geom type="mesh" rgba="0.75294 0.75294 0.75294 1" mesh="bracelet_no_vision_link"/>
+                  <body name="robotiq_85_base_link2" pos="0 0 -0.0615250000000001" euler="3.14159265358979 1.09937075168372E-32 0">
+                    <inertial mass="0.777441" pos="0 -2.70394e-05 0.0354675"
+                              quat="1 -0.00152849 0 0" diaginertia="0.000260285 0.000225381 0.000152708"/>
+                    <geom class="visual_2f85" mesh="robotiq_85_base_link" material="black_2f85"/>
+                    <geom class="collision_2f85" mesh="robotiq_85_base_link"/>
+                    <body name="robotiq_85_right_knuckle_link2" pos="0 0.0306011 0.054904">
+                      <inertial mass="0.00899563" pos="2.96931e-12 0.0177547 0.00107314"
+                                quat="0.681301 0.732003 0 0" diaginertia="1.72352e-06 1.60906e-06 3.22006e-07"/>
+                      <joint name="robotiq_85_right_knuckle_joint2" class="robotiq_85_outter_knuckle_link"/>
+                      <geom class="visual_2f85" mesh="robotiq_85_outter_knuckle_link" material="black_2f85"/>
+                      <geom class="collision_2f85" mesh="robotiq_85_outter_knuckle_link"/>
+                      <body name="robotiq_85_right_finger_link2" pos="0 0.0315 -0.0041">
+                        <inertial mass="0.0140974" pos="0 0.00301209 0.0232175"
+                                  quat="0.705636 -0.0455904 0.0455904 0.705636" diaginertia="4.16206e-06 3.52216e-06 8.88131e-07"/>
+                        <joint name="robotiq_85_right_finger_joint2" class="robotiq_85_finger_link"/>
+                        <geom class="visual_2f85" mesh="robotiq_85_finger_link" material="black_2f85"/>
+                        <geom class="collision_2f85" mesh="robotiq_85_finger_link"/>
+                      </body>
+                    </body>
+                    <body name="robotiq_85_right_inner_knuckle_link2" pos="0 0.0132 0.0609">
+                      <inertial mass="0.0221642" pos="-8.65005e-09 0.0181624 0.0212658"
+                                quat="0.663403 -0.244737 0.244737 0.663403" diaginertia="8.96853e-06 6.71733e-06 2.63931e-06"/>
+                      <joint name="robotiq_85_right_inner_knuckle_joint2" class="robotiq_85_inner_knuckle_link"/>
+                      <geom class="visual_2f85" mesh="robotiq_85_inner_knuckle_link" material="black_2f85"/>
+                      <geom class="collision_2f85" mesh="robotiq_85_inner_knuckle_link"/>
+                      <body name="robotiq_85_right_finger_tip_link2" pos="0 0.055 0.0375">
+                        <inertial mass="0.0125222" pos="0 -0.011046 0.0124786"
+                                  quat="1 0.1664 0 0" diaginertia="2.67415e-06 2.4559e-06 6.02031e-07"/>
+                        <joint name="robotiq_85_right_finger_tip_joint2" class="robotiq_85_finger_tip_link"/>
+                        <geom class="visual_2f85" mesh="robotiq_85_finger_tip_link" material="black_2f85"/>
+                        <geom class="collision_2f85" mesh="robotiq_85_finger_tip_link"/>
+                        <body name="right_pad2" pos="0 -0.0189 0.01352">
+                          <geom class="robotiq_85_finger_pad_box1"/>
+                          <geom class="robotiq_85_finger_pad_box2"/>
+                          <inertial mass="0.0035" pos="0 -0.0025 0.0185"
+                                    quat="0.707107 0 0 0.707107" diaginertia="4.73958e-07 3.64583e-07 1.23958e-07"/>
+                          <geom class="visual_2f85" mesh="robotiq_85_finger_pad"/>
+                          <site name="robotiq_85_finger_right_site2" type="box"
+                                size="0.011 0.001 0.018125" pos="0 -0.01 0.01770"
+                                rgba="0.3 0.2 0.1 1.0"/>
+                          <body name="right_silicone_pad2">
+                            <geom class="visual_2f85" mesh="robotiq_85_finger_silicone_pad" material="black_2f85"/>
+                          </body>
+                        </body>
+                      </body>
+                    </body>
+                    <body name="robotiq_85_left_knuckle_link2" pos="0 -0.0306011 0.054904" quat="0 0 0 1">
+                      <inertial mass="0.00899563" pos="0 0.0177547 0.00107314"
+                                quat="0.681301 0.732003 0 0" diaginertia="1.72352e-06 1.60906e-06 3.22006e-07"/>
+                      <joint name="robotiq_85_left_knuckle_joint2" class="robotiq_85_outter_knuckle_link"/>
+                      <geom class="visual_2f85" mesh="robotiq_85_outter_knuckle_link" material="black_2f85"/>
+                      <geom class="collision_2f85" mesh="robotiq_85_outter_knuckle_link"/>
+                      <body name="robotiq_85_left_finger_link2" pos="0 0.0315 -0.0041">
+                        <inertial mass="0.0140974" pos="0 0.00301209 0.0232175"
+                                  quat="0.705636 -0.0455904 0.0455904 0.705636" diaginertia="4.16206e-06 3.52216e-06 8.88131e-07"/>
+                        <joint name="robotiq_85_left_finger_joint2" class="robotiq_85_finger_link"/>
+                        <geom class="visual_2f85" mesh="robotiq_85_finger_link" material="black_2f85"/>
+                        <geom class="collision_2f85" mesh="robotiq_85_finger_link"/>
+                      </body>
+                    </body>
+                    <body name="robotiq_85_left_inner_knuckle_link2" pos="0 -0.0132 0.0609" quat="0 0 0 1">
+                      <inertial mass="0.0221642" pos="-8.65005e-09 0.0181624 0.0212658"
+                                quat="0.663403 -0.244737 0.244737 0.663403" diaginertia="8.96853e-06 6.71733e-06 2.63931e-06"/>
+                      <joint name="robotiq_85_left_inner_knuckle_joint2" class="robotiq_85_inner_knuckle_link"/>
+                      <geom class="visual_2f85" mesh="robotiq_85_inner_knuckle_link" material="black_2f85"/>
+                      <geom class="collision_2f85" mesh="robotiq_85_inner_knuckle_link"/>
+                      <body name="robotiq_85_left_finger_tip_link2" pos="0 0.055 0.0375">
+                        <inertial mass="0.0125222" pos="0 -0.011046 0.0124786"
+                                  quat="1 0.1664 0 0" diaginertia="2.67415e-06 2.4559e-06 6.02031e-07"/>
+                        <joint name="robotiq_85_left_finger_tip_joint2" class="robotiq_85_finger_tip_link"/>
+                        <geom class="visual_2f85" mesh="robotiq_85_finger_tip_link" material="black_2f85"/>
+                        <geom class="collision_2f85" mesh="robotiq_85_finger_tip_link"/>
+                        <body name="left_pad2" pos="0 -0.0189 0.01352">
+                          <geom class="robotiq_85_finger_pad_box1"/>
+                          <geom class="robotiq_85_finger_pad_box2"/>
+                          <inertial mass="0.0035" pos="0 -0.0025 0.0185"
+                                    quat="1 0 0 1" diaginertia="4.73958e-07 3.64583e-07 1.23958e-07"/>
+                          <geom class="visual_2f85" mesh="robotiq_85_finger_pad"/>
+                          <site name="robotiq_85_finger_left_site2" type="box"
+                                size="0.011 0.001 0.018125" pos="0 -0.01 0.01770"
+                                rgba="0.3 0.2 0.1 1.0"/>
+                          <body name="left_silicone_pad2">
+                            <geom class="visual_2f85" mesh="robotiq_85_finger_silicone_pad" material="black_2f85"/>
+                          </body>
+                        </body>
+                      </body>
+                    </body>
+                  </body>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+  </body>
+  <body name="truss_frame1" pos="0.65 -0.5 0.25" euler="0 0 0">
+      <inertial pos="0 0 0" mass="0.4" diaginertia="1000 1000 100"/>
+      <!--site name="truss1_site" type="box" size="0.05 0.05 0.05" rgba="0 1 0 0.5"/> -->
+      <freejoint/>
+      <!-- 顶部4边 -->
+      <geom class="truss" name="truss_geom" type="cylinder" size="0.02 0.21" pos="0 -0.23 0.23" euler="0 1.5708 0" density="1750" contype="1" conaffinity="1" friction="0 0 0"/>
+      <geom class="truss" type="cylinder" size="0.02 0.21" pos="0 0.23 0.23" euler="0 1.5708 0" density="1750" contype="1" conaffinity="1" friction="0 0 0"/>
+      <geom class="truss" type="cylinder" size="0.02 0.21" pos="-0.23 0 0.23" euler="1.5708 0 0" density="1750" contype="1" conaffinity="1" friction="0 0 0"/>
+      <geom class="truss" type="cylinder" size="0.02 0.21" pos="0.23 0 0.23" euler="1.5708 0 0" density="1750" contype="1" conaffinity="1" friction="0 0 0"/>
+      <!-- 底部4边 -->
+      <geom class="truss" type="cylinder" size="0.02 0.21" pos="0 -0.23 -0.23" euler="0 1.5708 0" density="1750" contype="1" conaffinity="1" friction="0 0 0"/>
+      <geom class="truss" type="cylinder" size="0.02 0.21" pos="0 0.23 -0.23" euler="0 1.5708 0" density="1750" contype="1" conaffinity="1" friction="0 0 0"/>
+      <geom class="truss" type="cylinder" size="0.02 0.21" pos="-0.23 0 -0.23" euler="1.5708 0 0" density="1750" contype="1" conaffinity="1" friction="0 0 0"/>
+      <geom class="truss" type="cylinder" size="0.02 0.21" pos="0.23 0 -0.23" euler="1.5708 0 0" density="1750" contype="1" conaffinity="1" friction="0 0 0"/>
+      <!-- 4条竖直边 - Z轴方向，不需要旋转 -->
+      <geom class="truss" type="cylinder" size="0.02 0.21" pos="-0.23 -0.23 0" density="1750" contype="1" conaffinity="1" friction="0 0 0"/>
+      <geom class="truss" type="cylinder" size="0.02 0.21" pos="-0.23 0.23 0" density="1750" contype="1" conaffinity="1" friction="0 0 0"/>
+      <geom class="truss" type="cylinder" size="0.02 0.21" pos="0.23 -0.23 0" density="1750" contype="1" conaffinity="1" friction="0 0 0"/>
+      <geom class="truss" type="cylinder" size="0.02 0.21" pos="0.23 0.23 0" density="1750" contype="1" conaffinity="1" friction="0 0 0"/>
+      <!-- 8个角 - 保持为长方体 -->
+      <geom class="truss" type="box" size="0.02 0.02 0.02" pos="-0.23 -0.23 -0.23" density="1750" contype="1" conaffinity="1" friction="0 0 0"/>
+      <geom class="truss" type="box" size="0.02 0.02 0.02" pos="-0.23 -0.23 0.23" density="1750" contype="1" conaffinity="1" friction="0 0 0"/>
+      <geom class="truss" type="box" size="0.02 0.02 0.02" pos="-0.23 0.23 -0.23" density="1750" contype="1" conaffinity="1" friction="1.0 0.005 0.0001"/>
+      <geom class="truss" type="box" size="0.02 0.02 0.02" pos="-0.23 0.23 0.23" density="1750" contype="1" conaffinity="1" friction="1.0 0.005 0.0001"/>
+      <geom class="truss" type="box" size="0.02 0.02 0.02" pos="0.23 -0.23 -0.23" density="1750" contype="1" conaffinity="1" friction="1.0 0.005 0.0001"/>
+      <geom class="truss" type="box" size="0.02 0.02 0.02" pos="0.23 -0.23 0.23" density="1750" contype="1" conaffinity="1" friction="1.0 0.005 0.0001"/>
+      <geom class="truss" type="box" size="0.02 0.02 0.02" pos="0.23 0.23 -0.23" density="1750" contype="1" conaffinity="1" friction="1.0 0.005 0.0001"/>
+      <geom class="truss" type="box" size="0.02 0.02 0.02" pos="0.23 0.23 0.23" density="1750" contype="1" conaffinity="1" friction="1.0 0.005 0.0001"/>
+      
+
+<geom class="truss" type="box" size="0.02 0.02 0.008" pos="-0.23 0.27 0.248" density="0" contype="1" conaffinity="1" friction="1.0 0.005 0.0001"/>
+<geom class="truss" type="box" size="0.02 0.02 0.008" pos="-0.23 0.27 0.212" density="0" contype="1" conaffinity="1" friction="1.0 0.005 0.0001"/>
+<geom class="truss" type="box" size="0.008 0.02 0.02" pos="-0.252 0.27 0.23" density="0" contype="1" conaffinity="1" friction="1.0 0.005 0.0001"/>
+<geom class="truss" type="box" size="0.008 0.02 0.02" pos="-0.208 0.27 0.23" density="0" contype="1" conaffinity="1" friction="1.0 0.005 0.0001"/>
+
+<geom class="truss" type="box" size="0.02 0.02 0.008" pos="0.23 0.27 0.248" density="0" contype="1" conaffinity="1" friction="1.0 0.005 0.0001"/>
+<geom class="truss" type="box" size="0.02 0.02 0.008" pos="0.23 0.27 0.212" density="0" contype="1" conaffinity="1" friction="1.0 0.005 0.0001"/>
+<geom class="truss" type="box" size="0.008 0.02 0.02" pos="0.208 0.27 0.23" density="0" contype="1" conaffinity="1" friction="1.0 0.005 0.0001"/>
+<geom class="truss" type="box" size="0.008 0.02 0.02" pos="0.252 0.27 0.23" density="0" contype="1" conaffinity="1" friction="1.0 0.005 0.0001"/>
+ <site name="hole_entrance1" pos="0.23 0.29 0.23" size="0.008 0.008 0.008" rgba="0 1 0 0.8"/>
+ <site name="hole_entrance2" pos="-0.23 0.29 0.23" size="0.008 0.008 0.008" rgba="0 1 0 0.8"/>
+ <site name="hole_bottom1" pos="0.23 0.26 0.23" size="0.008 0.008 0.008" rgba="1 1 0 0.8"/>
+ <site name="hole_bottom2" pos="-0.23 0.26 0.23" size="0.008 0.008 0.008" rgba="1 1 0 0.8"/>
+  </body>
+  <body name="truss_frame2" pos="0.65 0.5 0.25" euler="0 0 0">
+      <inertial pos="0 0 0" mass="0.4" diaginertia="1000 1000 100"/>
+      <freejoint/>
+      <geom class="truss" type="cylinder" size="0.02 0.21" pos="0 -0.23 0.23" euler="0 1.5708 0"  contype="1" conaffinity="1" friction="1.0 0.005 0.0001"/>
+      <geom class="truss" type="cylinder" size="0.02 0.21" pos="0 0.23 0.23" euler="0 1.5708 0"  contype="1" conaffinity="1" friction="1.0 0.005 0.0001"/>
+      <geom class="truss" type="cylinder" size="0.02 0.21" pos="-0.23 0 0.23" euler="1.5708 0 0"  contype="1" conaffinity="1" friction="1.0 0.005 0.0001"/>
+      <geom class="truss" type="cylinder" size="0.02 0.21" pos="0.23 0 0.23" euler="1.5708 0 0"  contype="1" conaffinity="1" friction="1.0 0.005 0.0001"/>
+
+      <geom class="truss" type="cylinder" size="0.02 0.21" pos="0 -0.23 -0.23" euler="0 1.5708 0"  contype="1" conaffinity="1" friction="1.0 0.005 0.0001"/>
+      <geom class="truss" type="cylinder" size="0.02 0.21" pos="0 0.23 -0.23" euler="0 1.5708 0"  contype="1" conaffinity="1" friction="1.0 0.005 0.0001"/>
+      <geom class="truss" type="cylinder" size="0.02 0.21" pos="-0.23 0 -0.23" euler="1.5708 0 0"  contype="1" conaffinity="1" friction="1.0 0.005 0.0001"/>
+      <geom class="truss" type="cylinder" size="0.02 0.21" pos="0.23 0 -0.23" euler="1.5708 0 0"  contype="1" conaffinity="1" friction="1.0 0.005 0.0001"/>
+
+      <geom class="truss" type="cylinder" size="0.02 0.21" pos="-0.23 -0.23 0" mass="1"  contype="1" conaffinity="1" friction="1.0 0.005 0.0001"/>
+      <geom class="truss" type="cylinder" size="0.02 0.21" pos="-0.23 0.23 0" mass="1"  contype="1" conaffinity="1" friction="1.0 0.005 0.0001"/>
+      <geom class="truss" type="cylinder" size="0.02 0.21" pos="0.23 -0.23 0" mass="1"  contype="1" conaffinity="1" friction="1.0 0.005 0.0001"/>
+      <geom class="truss" type="cylinder" size="0.02 0.21" pos="0.23 0.23 0" mass="1"  contype="1" conaffinity="1" friction="1.0 0.005 0.0001"/>
+
+      <!-- Peg: 简单圆柱销 -->
+      <!-- 保留原角点长方体 -->
+      <geom class="truss" type="box" size="0.02 0.02 0.02" pos="-0.23 -0.23 -0.23" density="0" contype="1" conaffinity="1" friction="0 0 0"/>
+      
+      
+      <geom class="truss" type="box" size="0.02 0.02 0.02" pos="-0.23 -0.23 0.23" density="0" contype="1" conaffinity="1" friction="0 0 0"/>
+      <geom class="truss" type="box" size="0.008 0.025 0.008" pos="-0.23 -0.26 0.23" density="0" contype="1" conaffinity="1" friction="1.0 0.005 0.0001"/>
+      
+      <geom class="truss" type="box" size="0.02 0.02 0.02" pos="-0.23 0.23 -0.23" density="0" contype="1" conaffinity="1" friction="0 0 0"/>
+      <geom class="truss" type="box" size="0.02 0.02 0.02" pos="-0.23 0.23 0.23" density="0" contype="1" conaffinity="1" friction="0 0 0"/>
+      
+      <geom class="truss" type="box" size="0.02 0.02 0.02" pos="0.23 -0.23 -0.23" density="0" contype="1" conaffinity="1" friction="1.0 0.005 0.0001"/>
+      
+      <geom class="truss" type="box" size="0.02 0.02 0.02" pos="0.23 -0.23 0.23" density="0" contype="1" conaffinity="1" friction="1.0 0.005 0.0001"/>
+      <geom class="truss" type="box" size="0.008 0.025 0.008" pos="0.23 -0.26 0.23" density="0" contype="1" conaffinity="1" friction="1.0 0.005 0.0001"/>
+      <geom class="truss" type="box" size="0.02 0.02 0.02" pos="0.23 0.23 -0.23" density="0" contype="1" conaffinity="1" friction="1.0 0.005 0.0001"/>
+      <geom class="truss" type="box" size="0.02 0.02 0.02" pos="0.23 0.23 0.23" density="0" contype="1" conaffinity="1" friction="1.0 0.005 0.0001"/>
+      <site name="peg_tip1" pos="0.23 -0.285 0.23" size="0.008 0.008 0.008" rgba="0 0 1 0.8"/>
+      <site name="peg_tip2" pos="-0.23 -0.285 0.23" size="0.008 0.008 0.008" rgba="0 0 1 0.8"/>
+  </body>
+  <!--<body name="truss_frame2" pos="0.65 0.55 0.25" euler="0 0 0">
+      <inertial pos="0 0 0" mass="1" diaginertia="10000 10000 50"/>
+      <freejoint/>-->
+      <!-- 顶部4边 - 改为长方体-->
+      <!--<geom class="truss" type="box" size="0.02 0.02 0.21" pos="0 -0.23 0.23" euler="0 1.5708 0" density="0" contype="1" conaffinity="1" friction="10.0 0.005 0.0001"/>
+      <geom class="truss" type="box" size="0.02 0.02 0.21" pos="0 0.23 0.23" euler="0 1.5708 0" density="0" contype="1" conaffinity="1" friction="10.0 0.005 0.0001"/>
+      <geom class="truss" type="box" size="0.02 0.02 0.21" pos="-0.23 0 0.23" euler="1.5708 0 0" density="0" contype="1" conaffinity="1" friction="10.0 0.005 0.0001"/>
+      <geom class="truss" type="box" size="0.02 0.02 0.21" pos="0.23 0 0.23" euler="1.5708 0 0" density="0" contype="1" conaffinity="1" friction="10.0 0.005 0.0001"/>-->
+      <!-- 底部4边 - 改为长方体 -->
+      <!--<geom class="truss" type="box" size="0.02 0.02 0.21" pos="0 -0.23 -0.23" euler="0 1.5708 0" density="0" contype="1" conaffinity="1" friction="0 0 0"/>
+      <geom class="truss" type="box" size="0.02 0.02 0.21" pos="0 0.23 -0.23" euler="0 1.5708 0" density="0" contype="1" conaffinity="1" friction="0 0 0"/>
+      <geom class="truss" type="box" size="0.02 0.02 0.21" pos="-0.23 0 -0.23" euler="1.5708 0 0" density="0" contype="1" conaffinity="1" friction="0 0 0"/>
+      <geom class="truss" type="box" size="0.02 0.02 0.21" pos="0.23 0 -0.23" euler="1.5708 0 0" density="0" contype="1" conaffinity="1" friction="0 0 0"/>-->
+      <!-- 4条竖直边 - Z轴方向，改为长方体 -->
+      <!--<geom class="truss" type="box" size="0.02 0.02 0.21" pos="-0.23 -0.23 0" mass="1"  contype="1" conaffinity="1" friction="1.0 0.005 0.0001"/>
+      <geom class="truss" type="box" size="0.02 0.02 0.21" pos="-0.23 0.23 0" mass="1"  contype="1" conaffinity="1" friction="1.0 0.005 0.0001"/>
+      <geom class="truss" type="box" size="0.02 0.02 0.21" pos="0.23 -0.23 0" mass="1"  contype="1" conaffinity="1" friction="1.0 0.005 0.0001"/>
+      <geom class="truss" type="box" size="0.02 0.02 0.21" pos="0.23 0.23 0" mass="1"  contype="1" conaffinity="1" friction="1.0 0.005 0.0001"/>-->
+      <!-- 8个角 - 保持为长方体 -->
+      <!--<geom class="truss" type="box" size="0.02 0.02 0.02" pos="-0.23 -0.23 -0.23" density="0" contype="1" conaffinity="1" friction="0 0 0"/>
+      <geom class="truss" type="box" size="0.02 0.02 0.02" pos="-0.23 -0.23 0.23" density="0" contype="1" conaffinity="1" friction="0 0 0"/>
+      <geom class="truss" type="box" size="0.02 0.02 0.02" pos="-0.23 0.23 -0.23" density="0" contype="1" conaffinity="1" friction="0 0 0"/>
+      <geom class="truss" type="box" size="0.02 0.02 0.02" pos="-0.23 0.23 0.23" density="0" contype="1" conaffinity="1" friction="0 0 0"/>
+      <geom class="truss" type="box" size="0.02 0.02 0.02" pos="0.23 -0.23 -0.23" density="0" contype="1" conaffinity="1" friction="0 0 0"/>
+      <geom class="truss" type="box" size="0.02 0.02 0.02" pos="0.23 -0.23 0.23" density="0" contype="1" conaffinity="1" friction="0 0 0"/>
+      <geom class="truss" type="box" size="0.02 0.02 0.02" pos="0.23 0.23 -0.23" density="0" contype="1" conaffinity="1" friction="0 0 0"/>
+      <geom class="truss" type="box" size="0.02 0.02 0.02" pos="0.23 0.23 0.23" density="0" contype="1" conaffinity="1" friction="0 0 0"/>
+  </body>-->
+  </worldbody>
+
+  <tendon>
+    <!-- Robotiq 夹爪肌腱设置 -->
+    <fixed name="split1">
+      <joint joint="robotiq_85_right_knuckle_joint1" coef="0.5"/>
+      <joint joint="robotiq_85_left_knuckle_joint1" coef="0.5"/>
+    </fixed>
+  </tendon>
+
+  <tendon>
+    <!-- Robotiq 夹爪肌腱设置 -->
+    <fixed name="split2">
+      <joint joint="robotiq_85_right_knuckle_joint2" coef="0.5"/>
+      <joint joint="robotiq_85_left_knuckle_joint2" coef="0.5"/>
+    </fixed>
+  </tendon>
+
+  <equality>
+    <connect anchor="0 0 0" body1="robotiq_85_right_finger_tip_link1" body2="robotiq_85_right_finger_link1"
+             solimp="0.95 0.99 0.001" solref="0.005 1"/>
+    <connect anchor="0 0 0" body1="robotiq_85_left_finger_tip_link1" body2="robotiq_85_left_finger_link1"
+             solimp="0.95 0.99 0.001" solref="0.005 1"/>
+    <joint joint1="robotiq_85_right_knuckle_joint1" joint2="robotiq_85_left_knuckle_joint1"
+             polycoef="0 1 0 0 0" solimp="0.95 0.99 0.001" solref="0.005 1"/>
+  </equality>
+  <equality>
+    <connect anchor="0 0 0" body1="robotiq_85_right_finger_tip_link2" body2="robotiq_85_right_finger_link2"
+             solimp="0.95 0.99 0.001" solref="0.005 1"/>
+    <connect anchor="0 0 0" body1="robotiq_85_left_finger_tip_link2" body2="robotiq_85_left_finger_link2"
+             solimp="0.95 0.99 0.001" solref="0.005 1"/>
+    <joint joint1="robotiq_85_right_knuckle_joint2" joint2="robotiq_85_left_knuckle_joint2"
+             polycoef="0 1 0 0 0" solimp="0.95 0.99 0.001" solref="0.005 1"/>
+  </equality>
+
+  <actuator>
+    <motor name="left_arm_joint_1" gear="1" joint="left_arm_joint_1" />
+    <!--<position name="pservo11" joint="Actuator1_1" kp="0"/>
+    <velocity name="vservo11" joint="Actuator1_1" kv="0"/>-->
+    <motor name="left_arm_joint_2" gear="1" joint="left_arm_joint_2" />
+    <!--<position name="pservo21" joint="Actuator2_1" kp="0"/>
+    <velocity name="vservo21" joint="Actuator2_1" kv="0"/>-->
+    <motor name="left_arm_joint_3" gear="1" joint="left_arm_joint_3" />
+    <!--<position name="pservo31" joint="Actuator3_1" kp="0"/>
+    <velocity name="vservo31" joint="Actuator3_1" kv="0"/>-->
+    <motor name="left_arm_joint_4" gear="1" joint="left_arm_joint_4" />
+    <!--<position name="pservo41" joint="Actuator4_1" kp="0"/>
+    <velocity name="vservo41" joint="Actuator4_1" kv="0"/>-->
+    <motor name="left_arm_joint_5" gear="1" joint="left_arm_joint_5" />
+    <!--<position name="pservo51" joint="Actuator5_1" kp="0"/>
+    <velocity name="vservo51" joint="Actuator5_1" kv="0"/>-->
+    <motor name="left_arm_joint_6" gear="1" joint="left_arm_joint_6" />
+    <!--<position name="pservo61" joint="Actuator6_1" kp="0"/>
+    <velocity name="vservo61" joint="Actuator6_1" kv="0"/>-->
+    <motor name="left_arm_joint_7" gear="1" joint="left_arm_joint_7" />
+    <!--<position name="pservo71" joint="Actuator7_1" kp="0"/>
+    <velocity name="vservo71" joint="Actuator7_1" kv="0"/>-->
+    <general class="2f85" name="left_fingers_actuator" tendon="split1" forcerange="-10 10"/>
+
+    <motor name="right_arm_joint_1" gear="1" joint="right_arm_joint_1" />
+    <!--<position name="pservo12" joint="Actuator1_2" kp="0"/>
+    <velocity name="vservo12" joint="Actuator1_2" kv="0"/>-->
+    <motor name="right_arm_joint_2" gear="1" joint="right_arm_joint_2" />
+    <!--<position name="pservo22" joint="Actuator2_2" kp="0"/>
+    <velocity name="vservo22" joint="Actuator2_2" kv="0"/>-->
+    <motor name="right_arm_joint_3" gear="1" joint="right_arm_joint_3" />
+    <!--<position name="pservo32" joint="Actuator3_2" kp="0"/>
+    <velocity name="vservo32" joint="Actuator3_2" kv="0"/>-->
+    <motor name="right_arm_joint_4" gear="1" joint="right_arm_joint_4" />
+    <!--<position name="pservo42" joint="Actuator4_2" kp="0"/>
+    <velocity name="vservo42" joint="Actuator4_2" kv="0"/>-->
+    <motor name="right_arm_joint_5" gear="1" joint="right_arm_joint_5" />
+    <!--<position name="pservo52" joint="Actuator5_2" kp="0"/>
+    <velocity name="vservo52" joint="Actuator5_2" kv="0"/>-->
+    <motor name="right_arm_joint_6" gear="1" joint="right_arm_joint_6" />
+    <!--<position name="pservo62" joint="Actuator6_2" kp="0"/>
+    <velocity name="vservo62" joint="Actuator6_2" kv="0"/>-->
+    <motor name="right_arm_joint_7" gear="1" joint="right_arm_joint_7" />
+    <!--<position name="pservo72" joint="Actuator7_2" kp="0"/>
+    <velocity name="vservo72" joint="Actuator7_2" kv="0"/>-->
+    <general class="2f85" name="right_fingers_actuator" tendon="split2" forcerange="-10 10"/>
+
+  </actuator>
+  <sensor>
+    <jointpos name="left_arm_joint_1_pos" joint="left_arm_joint_1" />
+    <jointpos name="left_arm_joint_2_pos" joint="left_arm_joint_2" />
+    <jointpos name="left_arm_joint_3_pos" joint="left_arm_joint_3" />
+    <jointpos name="left_arm_joint_4_pos" joint="left_arm_joint_4" />
+    <jointpos name="left_arm_joint_5_pos" joint="left_arm_joint_5" />
+    <jointpos name="left_arm_joint_6_pos" joint="left_arm_joint_6" />
+    <jointpos name="left_arm_joint_7_pos" joint="left_arm_joint_7" />
+    <jointpos name="right_arm_joint_1_pos" joint="right_arm_joint_1" />
+    <jointpos name="right_arm_joint_2_pos" joint="right_arm_joint_2" />
+    <jointpos name="right_arm_joint_3_pos" joint="right_arm_joint_3" />
+    <jointpos name="right_arm_joint_4_pos" joint="right_arm_joint_4" />
+    <jointpos name="right_arm_joint_5_pos" joint="right_arm_joint_5" />
+    <jointpos name="right_arm_joint_6_pos" joint="right_arm_joint_6" />
+    <jointpos name="right_arm_joint_7_pos" joint="right_arm_joint_7" />
+
+    <jointvel name="left_arm_joint_1_vel" joint="left_arm_joint_1" />
+    <jointvel name="left_arm_joint_2_vel" joint="left_arm_joint_2" />
+    <jointvel name="left_arm_joint_3_vel" joint="left_arm_joint_3" />
+    <jointvel name="left_arm_joint_4_vel" joint="left_arm_joint_4" />
+    <jointvel name="left_arm_joint_5_vel" joint="left_arm_joint_5" />
+    <jointvel name="left_arm_joint_6_vel" joint="left_arm_joint_6" />
+    <jointvel name="left_arm_joint_7_vel" joint="left_arm_joint_7" />
+    <jointvel name="right_arm_joint_1_vel" joint="right_arm_joint_1" />
+    <jointvel name="right_arm_joint_2_vel" joint="right_arm_joint_2" />
+    <jointvel name="right_arm_joint_3_vel" joint="right_arm_joint_3" />
+    <jointvel name="right_arm_joint_4_vel" joint="right_arm_joint_4" />
+    <jointvel name="right_arm_joint_5_vel" joint="right_arm_joint_5" />
+    <jointvel name="right_arm_joint_6_vel" joint="right_arm_joint_6" />
+    <jointvel name="right_arm_joint_7_vel" joint="right_arm_joint_7" />
+
+        <!-- 新增：桁架1的位置和姿态传感器 -->
+    <framepos name="truss1_pos" objtype="body" objname="truss_frame1"/>
+    <framequat name="truss1_quat" objtype="body" objname="truss_frame1"/>
+    <framelinvel name="truss1_linvel" objtype="body" objname="truss_frame1"/>
+    <frameangvel name="truss1_angvel" objtype="body" objname="truss_frame1"/>
+
+    <!-- 新增：桁架2的位置和姿态传感器 -->
+    <framepos name="truss2_pos" objtype="body" objname="truss_frame2"/>
+    <framequat name="truss2_quat" objtype="body" objname="truss_frame2"/>
+    <framelinvel name="truss2_linvel" objtype="body" objname="truss_frame2"/>
+    <frameangvel name="truss2_angvel" objtype="body" objname="truss_frame2"/>
+
+  </sensor>
+</mujoco>
